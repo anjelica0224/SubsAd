@@ -1,4 +1,5 @@
 require("dotenv").config();
+import userRoutes from "./routes/userRoutes.js";
 const {clerkMiddleware, requireAuth, clerkClient} = require('@clerk/express')
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,19 +15,20 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(clerkMiddleware())
 
+app.use("/users", userRoutes); // Base route for user APIs
 
 // app.get('/', async(req, res) => {
 //   res.send(await getAds());
 // });
-app.get('/protected', requireAuth({ signInUrl: '/sign-in' }), async (req, res) => {
-  const { userId } = req.auth
-  const user = await clerkClient.users.getUser(userId)
-  return res.json({ user })
-})
-app.get('/sign-in', (req, res) => {
-  // Assuming you have a template engine installed and are using a Clerk JavaScript SDK on this page
-  res.render('sign-in')
-})
+// app.get('/protected', requireAuth({ signInUrl: '/sign-in' }), async (req, res) => {
+//   const { userId } = req.auth
+//   const user = await clerkClient.users.getUser(userId)
+//   return res.json({ user })
+// })
+// app.get('/sign-in', (req, res) => {
+//   // Assuming you have a template engine installed and are using a Clerk JavaScript SDK on this page
+//   res.render('sign-in')
+// })
 // app.post('/', async(req,res) => {
 //   const newAd = req.body;
 //   await insertAd(newAd);
