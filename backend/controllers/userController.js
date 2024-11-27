@@ -1,14 +1,35 @@
-import { getUserMetadata } from "../auth/clerk.js";
-import { findUser } from "../models/userModel.js";
+const Teacher = require("../models/teacher");
 
-export const getUserDetails = async (req, res) => {
-  const clerkUserId = req.params.id;
+const handleWebhook = async (req, res) => {
+    const { type, data } = req.body;
 
-  //Fetch metadata from Clerk
-  const metadata = await getUserMetadata(clerkUserId);
+    try {
+        if (type === "user.created") {
+            const newTeacher = new Teacher({
+                clerkId: data.id,
+                name: `${data.first_name} ${data.last_name}`,
+                email: data.email_addresses[0]?.email_address,
+                availability: true,
+                availabilityTimeSlots: [],
+            });
+            await newTeacher.save();
+        } else if (type === "user.updated") {
+            await Teacher.findOneAndUpdate(
+                { clerkId: data.id },
+                {
+                    name: `${data.first_name} ${data.last_name}`,
+                    email: data.email_addresses[0]?.email_address,
+                }
+            );
+        } else if (type === "user.deleted") {
+            await Teacher.findOneAndDelete({ clerkId: data.id });
+        }
 
-  //Fetch additional data from MongoDB
-  const additionalData = await findUser(clerkUserId);
-
-  res.json({ metadata, additionalData });
+        res.status(200).send("Webhook processed successfully");
+    } catch (error) {
+        console.error("Error processing webhook:", error);
+        res.status(500).send("Internal Server Error");
+    }
 };
+
+module.exports = { handleWebhook };

@@ -1,8 +1,8 @@
-import express from "express";
-import { getUserDetails } from "../controllers/userController.js";
+const express = require("express");
+const { handleWebhook } = require("../controllers/userController");
 
 const router = express.Router();
 
-router.get("/:id", getUserDetails); // Fetch user details by Clerk user ID
+router.post("/webhooks/clerk", handleWebhook);
 
-export default router;
+module.exports = router;
