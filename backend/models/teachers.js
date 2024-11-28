@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const teacherSchema = new mongoose.Schema({
     clerkId: { type: String, required: true, unique: true },
@@ -12,4 +12,6 @@ const teacherSchema = new mongoose.Schema({
     contactInfo: { type: String },
 });
 
-module.exports = mongoose.model("Teacher", teacherSchema);
+const subsModel = mongoose.models.user || mongoose.model("subs", teacherSchema)
+export default subsModel;
+
