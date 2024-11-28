@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 
-const teacherSchema = new Schema({
+const teacherSchema = new mongoose.Schema({
     clerkId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -12,4 +12,4 @@ const teacherSchema = new Schema({
     contactInfo: { type: String },
 });
 
-export default model("Teacher", teacherSchema);
+module.exports = mongoose.model("Teacher", teacherSchema);
