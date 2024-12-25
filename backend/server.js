@@ -9,11 +9,11 @@ import userRouter from "./routes/webhookRoutes.js";
 
 
 const app = express();
-app.use(helmet());
-app.use(express.json());
-app.use(bodyParser.json());
+// app.use(helmet());
+// app.use(express.json());
+// app.use(bodyParser.json());
 app.use(cors());
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 
 await connectdb()
 app.get("/", (req, res) => res.send("API Working"));
